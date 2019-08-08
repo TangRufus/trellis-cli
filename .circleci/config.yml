@@ -39,11 +39,12 @@ jobs:
           command: |
             . venv/bin/activate
             ansible-galaxy install -r requirements.yml
+          working_directory: cmd/testdata/trellis
       - save_cache:
           key: ansible-v1-{{ checksum "requirements.yml" }}
           paths:
             - venv
-            - vendor
+            - cmd/testdata/trellis/vendor
 
       # Install go
       - run: wget https://dl.google.com/go/go1.12.7.linux-amd64.tar.gz
