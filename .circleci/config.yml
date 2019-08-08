@@ -32,13 +32,13 @@ jobs:
       - run: git submodule update --init
       - restore_cache:
           keys:
-            - ansible-v1-{{ checksum "cmd/testdata/trellis/vendor/requirements.yml" }}
+            - ansible-v1-{{ checksum "cmd/testdata/trellis/requirements.yml" }}
       - run:
           name: Install Galaxy roles
           command: ansible-galaxy install -r requirements.yml
           working_directory: cmd/testdata/trellis
       - save_cache:
-          key: ansible-v1-{{ checksum "cmd/testdata/trellis/vendor/requirements.yml" }}
+          key: ansible-v1-{{ checksum "cmd/testdata/trellis/requirements.yml" }}
           paths:
             - venv
             - cmd/testdata/trellis/vendor
@@ -46,7 +46,7 @@ jobs:
           keys:
             - go-mod-v1-{{ checksum "go.sum" }}
       - run: go build
-      - run: go test -v --tag=integration ./...
+      - run: go test -v ./...
       - save_cache:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
