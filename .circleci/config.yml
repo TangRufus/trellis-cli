@@ -40,7 +40,7 @@ jobs:
             . venv/bin/activate
             ansible-galaxy install -r requirements.yml
       - save_cache:
-          key: ansible-v1-<< parameters.python-version >>-<< parameters.ansible-version >>-{{ checksum "requirements.yml" }}
+          key: ansible-v1-{{ checksum "requirements.yml" }}
           paths:
             - venv
             - vendor
@@ -51,8 +51,15 @@ jobs:
       - run: sudo mv go /usr/local
       - run: go version
 
+      - restore_cache:
+          keys:
+            - go-mod-v1-{{ checksum "go.sum" }}
       - run: go build
       - run: go test -v --tag=integration ./...
+      - save_cache:
+          key: go-mod-v1-{{ checksum "go.sum" }}
+          paths:
+            - /go/pkg/mod
 
   release:
     docker:
