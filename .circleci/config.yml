@@ -26,7 +26,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - ansible-v1-{{ checksum "requirements.yml" }}
+            - ansible-v1-{{ checksum "cmd/testdata/trellis/vendor/requirements.yml" }}
       - run:
           name: Install Ansible in a venv
           command: |
@@ -41,7 +41,7 @@ jobs:
             ansible-galaxy install -r requirements.yml
           working_directory: cmd/testdata/trellis
       - save_cache:
-          key: ansible-v1-{{ checksum "requirements.yml" }}
+          key: ansible-v1-{{ checksum "cmd/testdata/trellis/vendor/requirements.yml" }}
           paths:
             - venv
             - cmd/testdata/trellis/vendor
