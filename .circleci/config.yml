@@ -26,7 +26,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - ansible-v1-<< parameters.python-version >>-<< parameters.ansible-version >>-{{ checksum "requirements.yml" }}
+            - ansible-v1-{{ checksum "requirements.yml" }}
       - run:
           name: Install Ansible in a venv
           command: |
