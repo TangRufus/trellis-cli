@@ -15,6 +15,48 @@ jobs:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
             - /go/pkg/mod
+
+  integration-test:
+    docker:
+      - image: 'circleci/python:3-stretch'
+    environment:
+      TEST_BINARY: ~/project/trellis-cli
+    steps:
+      - run: python --version
+      - checkout
+      - restore_cache:
+          keys:
+            - ansible-v1-<< parameters.python-version >>-<< parameters.ansible-version >>-{{ checksum "requirements.yml" }}
+      - run:
+          name: Install Ansible in a venv
+          command: |
+            virtualenv venv
+            . venv/bin/activate
+            pip install ansible~=2.7.0
+            ansible --version
+      - run:
+          name: Install Galaxy roles
+          command: |
+            . venv/bin/activate
+            ansible-galaxy install -r requirements.yml
+      - save_cache:
+          key: ansible-v1-<< parameters.python-version >>-<< parameters.ansible-version >>-{{ checksum "requirements.yml" }}
+          paths:
+            - venv
+            - vendor
+
+      # Install go
+      - run: wget https://dl.google.com/go/go1.12.7.linux-amd64.tar.gz
+      - run: sudo tar -xvf go1.12.7.linux-amd64.tar.gz
+      - run: sudo mv go /usr/local
+      - run: go version
+
+      - run: go build
+      - run: go test -v --tag=integration ./...
+
+
+
+
   release:
     docker:
       - image: circleci/golang:1.12
