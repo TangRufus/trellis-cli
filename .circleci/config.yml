@@ -18,11 +18,16 @@ jobs:
 
   integration-test:
     docker:
-      - image: 'circleci/python:3-stretch'
+      - image: circleci/golang:1.12
     environment:
       TEST_BINARY: ~/project/trellis-cli
     steps:
-      - run: python --version
+      - run: go version
+      - run: sudo apt-get update
+      - run: sudo apt-get install --yes --no-install-recommends software-properties-common
+      - run: sudo add-apt-repository --yes --update ppa:ansible/ansible-2.7
+      - run: sudo apt-get install --yes --no-install-recommends ansible
+
       - checkout
       - restore_cache:
           keys:
@@ -45,12 +50,6 @@ jobs:
           paths:
             - venv
             - cmd/testdata/trellis/vendor
-
-      # Install go
-      - run: wget https://dl.google.com/go/go1.12.7.linux-amd64.tar.gz
-      - run: sudo tar -xvf go1.12.7.linux-amd64.tar.gz
-      - run: sudo mv go /usr/local
-      - run: go version
 
       - restore_cache:
           keys:
