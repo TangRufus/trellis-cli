@@ -54,9 +54,6 @@ jobs:
       - run: go build
       - run: go test -v --tag=integration ./...
 
-
-
-
   release:
     docker:
       - image: circleci/golang:1.12
@@ -69,6 +66,7 @@ workflows:
   test:
     jobs:
       - test
+      - integration-test
       - release:
           filters:
             branches:
