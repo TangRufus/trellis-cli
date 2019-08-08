@@ -35,9 +35,7 @@ jobs:
             - ansible-v1-{{ checksum "cmd/testdata/trellis/vendor/requirements.yml" }}
       - run:
           name: Install Galaxy roles
-          command: |
-            . venv/bin/activate
-            ansible-galaxy install -r requirements.yml
+          command: ansible-galaxy install -r requirements.yml
           working_directory: cmd/testdata/trellis
       - save_cache:
           key: ansible-v1-{{ checksum "cmd/testdata/trellis/vendor/requirements.yml" }}
