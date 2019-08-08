@@ -26,17 +26,11 @@ jobs:
       - run: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367
       - run: echo "deb http://ppa.launchpad.net/ansible/ansible-2.7/ubuntu bionic main " | sudo tee -a /etc/apt/sources.list
       - run: sudo apt-get install --yes --no-install-recommends ansible
+      - run: ansible --version
       - checkout
       - restore_cache:
           keys:
             - ansible-v1-{{ checksum "cmd/testdata/trellis/vendor/requirements.yml" }}
-      - run:
-          name: Install Ansible in a venv
-          command: |
-            virtualenv venv
-            . venv/bin/activate
-            pip install ansible~=2.7.0
-            ansible --version
       - run:
           name: Install Galaxy roles
           command: |
