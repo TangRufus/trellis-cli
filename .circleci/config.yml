@@ -10,7 +10,7 @@ jobs:
       - restore_cache:
           keys:
             - go-mod-v1-{{ checksum "go.sum" }}
-      - run: go test -v ./...
+      - run: go test -v -short ./...
       - save_cache:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
@@ -20,14 +20,12 @@ jobs:
     docker:
       - image: circleci/golang:1.12
     environment:
-      TEST_BINARY: ~/project/trellis-cli
+      TEST_BINARY: /home/circleci/project/trellis-cli
     steps:
       - run: go version
-      - run: sudo apt-get update
-      - run: sudo apt-get install --yes --no-install-recommends software-properties-common
-      - run: sudo add-apt-repository --yes --update ppa:ansible/ansible-2.7
+      - run: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367
+      - run: echo "deb http://ppa.launchpad.net/ansible/ansible-2.7/ubuntu bionic main " | sudo tee -a /etc/apt/sources.list
       - run: sudo apt-get install --yes --no-install-recommends ansible
-
       - checkout
       - restore_cache:
           keys:
@@ -50,7 +48,6 @@ jobs:
           paths:
             - venv
             - cmd/testdata/trellis/vendor
-
       - restore_cache:
           keys:
             - go-mod-v1-{{ checksum "go.sum" }}
